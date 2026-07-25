@@ -1,116 +1,123 @@
-# D2W-GAN
+# D2W-GAN: Wavelet-Driven GAN with Attention Mechanism for Improved Raindrop Removal
 
-Official implementation of **DeRainDrop**, a deep learning framework for raindrop removal from single images.
+### Manuscript Status
+**Code repository accompanying the submitted journal manuscript**
+
+#### Authors and Affiliations
+
+- **Muthukumar Balamurugan** (Department of Electronics and Communication Engineering, National Institute of Technology Tiruchirappalli, Tamil Nadu, India; Valeo India Private Limited, Tamil Nadu, India)
+- **Shivarama K. Holla** (AUMOVIO Autonomous Mobility India Private Limited, Bengaluru, Karnataka, India)
+- **Varun P. Gopi** (Department of Electronics and Communication Engineering, National Institute of Technology Tiruchirappalli, Tamil Nadu, India)
 
 ---
 
-## Overview
+This repository contains the complete implementation of **D2W-GAN**, a wavelet-driven Generative Adversarial Network (GAN) with attention mechanisms for single-image raindrop removal.
 
-This repository provides the implementation for training and evaluating the proposed DeRainDrop model. The framework supports both training from scratch and inference using pretrained checkpoints.
+The repository includes:
+
+- Training pipeline for D2W-GAN
+- Testing and inference scripts
+- DT-CWT-based multi-scale feature extraction
+- Attention-guided U-Net generator
+- Pix2Pix PatchGAN discriminator
+- Multi-GPU training support
+- Automatic checkpoint saving and loading
+- Inference time measurement
+- Model parameter evaluation
+- Restoration result visualization
 
 ---
 
-## Requirements
+# Project Objective
 
-### Hardware
-- NVIDIA GPU (recommended)
-- CUDA-enabled environment
+The objective of this work is to restore high-quality clean images from raindrop-degraded inputs by integrating the **Dual-Tree Complex Wavelet Transform (DT-CWT)** with an attention-guided Generative Adversarial Network.
 
-### Software
-- Python >= 3.8
-- PyTorch >= 1.12
-- CUDA >= 11.3 (recommended)
+The proposed framework aims to:
 
-### Python Packages
+- Remove adherent raindrops from a single image
+- Preserve structural details and fine textures
+- Improve perceptual image quality
+- Enhance downstream computer vision applications such as object detection and autonomous driving
 
-Install the required dependencies using:
+---
+
+# Dataset
+
+The proposed framework is evaluated on publicly available raindrop removal datasets.
+
+| Dataset | Purpose |
+|----------|----------|
+| RainDrop Dataset | Model training and evaluation |
+| RainDS Dataset | Generalization evaluation on real-world raindrop images |
+
+---
+
+# Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/<username>/D2W-GAN.git
+
+cd D2W-GAN
+```
+
+---
+
+## Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+---
+
+## Activate Environment
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-or install manually:
-
-```bash
-pip install torch torchvision
-pip install opencv-python
-pip install numpy
-pip install thop
-```
-
 ---
 
-## Repository Structure
+# Dataset Organization
 
-```
-DeRainDrop/
+Organize the dataset as follows.
+
+```text
+data/
+├── train/
 │
-├── data/
-│   ├── train/
-│   ├── test_a/
-│   └── test_b/
+├── test_a/
+│   └── data/
+│       ├── image001.png
+│       ├── image002.png
+│       └── ...
 │
-├── model/
-├── utils.py
-├── train.py
-├── test.py
-├── requirements.txt
-├── checkpoints/
-├── results/
-└── README.md
-```
-
----
-
-# Dataset Preparation
-
-## Training Dataset
-
-Place the training dataset inside
-
-```
-data/
-└── train/
-```
-
-Example:
-
-```
-data/
-└── train/
-    ├── image001.png
-    ├── image002.png
-    ├── image003.png
-    └── ...
-```
-
-If your dataset contains paired rainy and clean images, organize them according to the dataset loader implemented in `find_model()`.
-
----
-
-## Testing Dataset
-
-Testing images should be placed under
-
-```
-data/
 └── test_b/
     └── data/
-```
-
-Example:
-
-```
-data/
-└── test_b/
-    └── data/
-        ├── test001.png
-        ├── test002.png
-        ├── test003.png
+        ├── image001.png
+        ├── image002.png
         └── ...
 ```
 
-Additional test datasets can be added following the same structure.
+> **Note:** Training image pairs and testing images should follow the dataset format expected by the data loader implemented in `model/find_model.py`.
 
 ---
 
@@ -122,7 +129,7 @@ Run
 python train.py
 ```
 
-Common options
+Example
 
 ```bash
 python train.py \
@@ -133,23 +140,11 @@ python train.py \
     --lr 0.0002
 ```
 
-### Training Arguments
-
-| Argument | Description | Default |
-|----------|-------------|---------|
-| `--model` | Model name | proposed |
-| `--dataset_dir` | Dataset directory | ./data |
-| `--batch_size` | Batch size | 8 |
-| `--max_epochs` | Number of epochs | 2000 |
-| `--lr` | Learning rate | 0.0002 |
-| `--ckpt_dir` | Checkpoint directory | ./checkpoints |
-| `--save_dir` | Output directory | ./results |
-
 ---
 
 # Testing
 
-Run
+Evaluate a trained model using
 
 ```bash
 python test.py
@@ -164,22 +159,26 @@ python test.py \
     --dataset_dir ./data
 ```
 
-### Testing Arguments
+Available resize modes
 
-| Argument | Description | Default |
-|----------|-------------|---------|
-| `--model` | Model name | proposed |
-| `--ckpt_epoch` | Checkpoint epoch | 400 |
-| `--dataset_dir` | Dataset directory | ./data |
-| `--resize` | Resize mode (`original`, `square`, `expand`) | original |
+- original
+- square
+- expand
 
 ---
 
-# Output
+# Expected Outputs
 
-Results are saved to
+Model checkpoints are saved automatically in
 
+```text
+checkpoints/
+└── proposed/
 ```
+
+The restored images are saved in
+
+```text
 results/
 └── proposed/
     └── test_b/
@@ -190,35 +189,61 @@ results/
             └── ...
 ```
 
+The testing script additionally reports:
+
+- Total trainable parameters
+- Average inference time
+- Per-image inference time
+- Restored output images
+
 ---
 
-# Checkpoints
+# Experimental Settings
 
-Model checkpoints are stored in
+The proposed model was trained using:
 
+- Optimizer: Adam
+- Learning rate: 2 × 10⁻⁴
+- Batch size: 4 (paper) / configurable in the code
+- Training epochs: 1700 (paper)
+- Multi-scale DT-CWT decomposition
+- Attention-guided U-Net generator
+- PatchGAN discriminator
+
+---
+
+# Requirements
+
+```text
+Python >= 3.8
+
+torch>=1.12
+torchvision>=0.13
+opencv-python
+numpy
+Pillow
+thop
+tqdm
 ```
-checkpoints/
-└── proposed/
-```
 
-To evaluate a trained model, specify the checkpoint epoch:
+Install all dependencies using
 
 ```bash
-python test.py --ckpt_epoch 400
+pip install -r requirements.txt
 ```
 
 ---
 
 # Citation
 
-If you find this work useful, please cite our paper:
+If you find this repository useful in your research, please cite:
 
 ```bibtex
-@article{yourpaper2026,
-  title={Title of Your Paper},
-  author={Author One and Author Two},
-  journal={Journal Name},
-  year={2026}
+@article{Balamurugan2026,
+  title   = {Wavelet-Driven GAN with Attention Mechanism for Improved Raindrop Removal},
+  author  = {Muthukumar Balamurugan and Shivarama K. Holla and Varun P. Gopi},
+  journal = {IEEE Latin America Transactions},
+  year    = {2026}
 }
 ```
 
@@ -226,56 +251,4 @@ If you find this work useful, please cite our paper:
 
 # License
 
-This project is released for research purposes. Please cite the corresponding paper if you use this repository in your research.
-=======
-# DewdropNet - Raindrop Removal Evaluation
-
-This repository contains the code for evaluating the performance of a raindrop removal model using various image quality metrics. The evaluation includes metrics such as PSNR, SSIM and NIQE on a set of raindrop-degraded images and their corresponding ground truth (clean) images.
-
-## Prerequisites
-
-Make sure you have the following libraries installed:
-
-- Python 3.6.2
-- OpenCV 4.2.0.34
-- NumPy 1.19.5
-- Scikit-image 0.17.2
-- scipy 1.5.4
-
-You can install the required libraries using the following command:
-
-```bash
-pip install opencv-python numpy scikit-image niqe
-
-python evaluate.py --output_folder "path/to/output_folder" --gt_folder "path/to/gt_folder"   
-```
-
-## Dataset 
-
-The whole dataset can be find in ATTGAN author pages(https://github.com/rui1996/DeRaindrop)
-The whole dataset can be find here as well in drive directly (https://drive.google.com/open?id=1e7R76s6vwUJxILOcAsthgDLPSnOrQ49K)
-
-####Training Set:
-
-861 image pairs for training.
-
-####Testing Set A:
-
-For quantitative evaluation where the alignment of image pairs is good. A subset of testing set B.
-
-####Testing Set B:
-
-239 image pairs for testing.
-
-Replace the following placeholders with your actual folder paths:
-
-"path/to/output_folder": The folder containing the raindrop-degraded images (model outputs).  
-"path/to/gt_folder": The folder containing the corresponding ground truth (clean) images.
-
-## Acknowledgements
-
-This code is based on the implementations of [Raindrop-Removal](https://github.com/Hyukju/Raindrop-Removal).
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
+This project is released for academic and research purposes. If you use this repository in your research, please cite the corresponding publication.
