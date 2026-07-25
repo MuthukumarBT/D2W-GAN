@@ -117,7 +117,7 @@ def test(args):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(prog="DeRainDrop")
+    parser = argparse.ArgumentParser(prog="D2WGAN")
 
     parser.add_argument(
         "--model",

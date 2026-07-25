@@ -247,3 +247,8 @@ Citation information will be updated once the manuscript is published
 # License
 
 This project is released for academic and research purposes. If you use this repository in your research, please cite the corresponding publication.
+
+
+## Acknowledgements
+
+This code is based on the implementations of [Raindrop-Removal](https://github.com/Hyukju/Raindrop-Removal).
