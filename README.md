@@ -1,6 +1,6 @@
-# D2W-GAN: Wavelet-Driven GAN with Attention Mechanism for Improved Raindrop Removal
+# Wavelet-Driven GAN with Attention Mechanism for Improved Raindrop Removal
 
-### Manuscript Status
+### Manuscript ID: IEEE LATAM Submission ID: 10735
 **Code repository accompanying the submitted journal manuscript**
 
 #### Authors and Affiliations
@@ -238,13 +238,8 @@ pip install -r requirements.txt
 
 If you find this repository useful in your research, please cite:
 
-```bibtex
-@article{Balamurugan2026,
-  title   = {Wavelet-Driven GAN with Attention Mechanism for Improved Raindrop Removal},
-  author  = {Muthukumar Balamurugan and Shivarama K. Holla and Varun P. Gopi},
-  journal = {IEEE Latin America Transactions},
-  year    = {2026}
-}
+```
+Citation information will be updated once the manuscript is published
 ```
 
 ---
